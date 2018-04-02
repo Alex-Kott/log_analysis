@@ -30,26 +30,39 @@ def count_video_related(total, video_related_requests):
 	    values, autopct='%.1f', radius = 1.1,
 	    explode = [0.15] + [0 for _ in range(len(names) - 1)] )
 	plt.legend(
-	    bbox_to_anchor = (-0.16, 0.45, 0.25, 0.25),
+	    bbox_to_anchor = (-0.16, 0, 0, 0.25),
 	    loc = 'lower left', labels = names )
 	fig.savefig('general_relation.png')
 
 
 
-def classify(requests):
-	content_types = {
-		"adult": ["порно", "секс", "минет", "куни"],
-		"series": ["сезон", "серия", "престолов"]
-	}
+def count_by_device(touch, desktop):
+	names = ['Сенсорные девайсы (смартфоны, планшеты)', 'Десктоп']
+	values = [touch, desktop]
+	
+	dpi = 80
 
-	for request in requests:
-			pass
+	fig = plt.figure(dpi=dpi, figsize=(512/dpi, 384/dpi))
+	mpl.rcParams.update({'font.size': 9})
 
-	for content_type, key_words in content_types.items():
-		pass
+	plt.title('Соотношение запросов, полученных с десктопных устройств \n к запросам с сенсорных устройств')
+
+	xs = range(len(names))
+
+	plt.pie( 
+	    values, autopct='%.1f', radius = 1.1,
+	    explode = [0.15] + [0 for _ in range(len(names) - 1)] )
+	plt.legend(
+	    bbox_to_anchor = (-0.16, 0, 0, 0.25),
+	    loc = 'lower left', labels = names )
+	fig.savefig('devices_relation.png')
+	
 
 
 if __name__ == "__main__":
+	# count_by_device(38985, 10959)
+	# exit()
+
 	log = pd.read_csv("log", sep='\t', header=0)
 
 	devices = defaultdict(int)
@@ -63,20 +76,15 @@ if __name__ == "__main__":
 				continue
 
 			video_content_search = []
-			if search_words(text, [' телев', 'телепер', 'телепрог', 'смотреть', 'сериал', 'кино']):
+			if search_words(text, [' телев', 'телепер', 'телепрог', 'смотреть', 'сериал', 'кино', 'сезон']):
 				count+=1
+				if count > 10000:
+					break
 				video_content_search.append(text)
-			# else:
-				file.write(text + '\n')
+				# file.write(text + '\n')
+				devices[row['device']] += 1
 
-	# classify(video_content_search)
 
 	count_video_related(count, index)
+	count_by_device(devices["touch"], devices["desktop"])
 
-	
-
-# print(set(devices))
-	# if i>100:
-	# 	break
-	# i += 1
-	# print(row.__dict__)
