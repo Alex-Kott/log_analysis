@@ -88,8 +88,8 @@ if __name__ == "__main__":
 		filter_lexems = [' телев', 'телепер', 'телепрог', 'смотреть', 'сериал', 'кино', 'сезон']
 		if search_words(text, filter_lexems):
 			count = count + 1
-			if count > 10000:
-				break
+			# if count > 10000:
+				# break
 			video_content_search.append(text)
 			devices[row['device']] += 1
 
